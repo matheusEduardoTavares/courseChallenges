@@ -11,8 +11,6 @@ services:
       - ./node:/usr/src/app
     tty: true
     container_name: app
-    ports:
-      - "3000:3000"
     depends_on:
       - db
     entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh
@@ -30,6 +28,15 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     networks:
       - custom-node-network
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    networks:
+      - custom-node-network
+    ports:
+      - "8080:80"
 
 networks:
   custom-node-network:
